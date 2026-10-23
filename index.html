@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wendy's Cat Sitting 🐾</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐈</text></svg>">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#fbf6ef; --card:#fff; --ink:#2b2118; --muted:#8a7563; --line:#eee2d4;
+    --accent:#e07a3f; --accent-soft:#fde7d8; --ok:#2e7d32; --bad:#c62828;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Inter,system-ui,sans-serif}
+  .wrap{max-width:760px;margin:0 auto;padding:32px 16px 48px}
+  header{text-align:center;margin-bottom:24px}
+  .logo{font-size:52px;line-height:1}
+  h1{font-family:Fraunces,Georgia,serif;font-size:clamp(26px,5vw,38px);margin:10px 0 6px;letter-spacing:-.01em}
+  .sub{color:var(--muted);margin:0}
+  .tabs{display:flex;gap:6px;justify-content:center;margin-bottom:16px}
+  .tabs button{border:0;background:transparent;padding:10px 16px;border-radius:999px;font:600 15px Inter,sans-serif;color:var(--muted);cursor:pointer}
+  .tabs button.active{background:var(--ink);color:#fff}
+  .card{background:var(--card);border-radius:20px;padding:24px;box-shadow:0 6px 30px rgba(80,50,20,.07)}
+  label{display:block;font-weight:600;font-size:14px;margin:16px 0 6px}
+  .opt{font-weight:400;color:var(--muted)}
+  input,textarea{width:100%;border:1px solid #e0d2c2;border-radius:12px;padding:12px 14px;font:inherit;background:#fffdfa;color:inherit}
+  input:focus,textarea:focus{outline:2px solid var(--accent);border-color:transparent}
+  input[readonly]{background:#f6efe6;color:var(--muted)}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:560px){.row{grid-template-columns:1fr}}
+  .cal-wrap{display:flex;justify-content:center;overflow-x:auto}
+  .fp-hidden{display:none}
+  .range-text{text-align:center;margin:12px 0 0;font-weight:600}
+  .range-text.muted{color:var(--muted);font-weight:400}
+  .range-text.bad{color:var(--bad)}
+  .primary,.danger,.ghost{border:0;border-radius:12px;padding:14px 20px;font:600 16px Inter,sans-serif;cursor:pointer}
+  .primary{background:var(--accent);color:#fff;width:100%;margin-top:20px}
+  .primary:disabled{opacity:.6;cursor:wait}
+  .danger{background:transparent;color:var(--bad);width:100%;margin-top:8px}
+  .msg{margin-top:14px;padding:12px 14px;border-radius:12px;font-size:15px}
+  .msg.err{background:#fdecec;color:var(--bad)}
+  .msg.ok{background:#eaf5ea;color:var(--ok)}
+  .msg.info{background:var(--accent-soft)}
+  .inline-form{display:flex;gap:8px;margin-top:12px}
+  .inline-form .primary{width:auto;margin:0;white-space:nowrap}
+  @media (max-width:560px){.inline-form{flex-direction:column}}
+  .status{padding:12px 14px;border-radius:12px;margin-bottom:8px;font-weight:600}
+  .status.pending{background:#fff4e5}
+  .status.approved{background:#eaf5ea;color:var(--ok)}
+  .status.rejected,.status.cancelled{background:#f3f0ec;color:var(--muted)}
+  .status small{display:block;font-weight:400;margin-top:4px;white-space:pre-wrap}
+  footer{text-align:center;color:var(--muted);font-size:13px;margin-top:20px}
+  /* calendar */
+  .flatpickr-calendar.inline{box-shadow:none;border:1px solid var(--line);border-radius:14px}
+  .flatpickr-day.selected,.flatpickr-day.startRange,.flatpickr-day.endRange{background:var(--accent)!important;border-color:var(--accent)!important}
+  .flatpickr-day.inRange{background:var(--accent-soft);border-color:var(--accent-soft);box-shadow:-5px 0 0 var(--accent-soft),5px 0 0 var(--accent-soft)}
+  .flatpickr-day.flatpickr-disabled:not(.prevMonthDay):not(.nextMonthDay){text-decoration:line-through;color:#d3c4b5}
+  /* modal */
+  .modal{position:fixed;inset:0;background:rgba(43,33,24,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
+  .modal[hidden]{display:none}
+  .modal-box{background:#fff;border-radius:20px;padding:28px;max-width:420px;width:100%;text-align:center;animation:pop .25s ease}
+  .modal-emoji{font-size:48px}
+  .modal-box h2{font-family:Fraunces,Georgia,serif;margin:8px 0}
+  .modal-box p{color:var(--muted);margin:0}
+  @keyframes pop{from{transform:scale(.92);opacity:0}to{transform:none;opacity:1}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <div class="logo">🐈</div>
+    <h1>Wendy's Cat Sitting</h1>
+    <p class="sub">Off on an adventure? Your cat gets snacks, chin scratches and zero judgement while you're away. 🐟</p>
+  </header>
+
+  <nav class="tabs">
+    <button data-tab="book" class="active">Book</button>
+    <button data-tab="manage">Manage my booking</button>
+  </nav>
+
+  <!-- BOOK -->
+  <section id="tab-book" class="card">
+    <form id="bookForm" novalidate>
+      <label>Your dates</label>
+      <div class="cal-wrap"><input id="bookDates" class="fp-hidden"></div>
+      <p id="bookRange" class="range-text muted">Loading availability…</p>
+      <div class="row">
+        <div><label for="bName">Cat's name</label><input id="bName" name="name" maxlength="100" autocomplete="off" placeholder="e.g. Mochi"></div>
+        <div><label for="bEmail">Email</label><input id="bEmail" name="email" type="email" autocomplete="email"></div>
+      </div>
+      <div id="bookMsg" class="msg" hidden></div>
+      <button type="submit" class="primary" id="bookBtn">Request booking</button>
+    </form>
+  </section>
+
+  <!-- MANAGE -->
+  <section id="tab-manage" class="card" hidden>
+    <div id="manageLookup">
+      <p style="margin-top:0">Enter the email you booked with, and I'll send you a private link to view, change or cancel your booking.</p>
+      <form id="lookupForm" class="inline-form" novalidate>
+        <input id="lEmail" type="email" placeholder="you@example.com" autocomplete="email">
+        <button class="primary" id="lookupBtn">Email me my link</button>
+      </form>
+      <div id="lookupMsg" class="msg" hidden></div>
+    </div>
+
+    <div id="manageEdit" hidden>
+      <div id="editStatus" class="status"></div>
+      <form id="editForm" novalidate>
+        <label>Dates</label>
+        <div class="cal-wrap"><input id="editDates" class="fp-hidden"></div>
+        <p id="editRange" class="range-text"></p>
+        <div class="row">
+          <div><label for="eName">Cat's name</label><input id="eName" maxlength="100" autocomplete="off"></div>
+          <div><label for="eEmail">Email</label><input id="eEmail" readonly></div>
+        </div>
+        <div id="editMsg" class="msg" hidden></div>
+        <button type="submit" class="primary" id="saveBtn">Save changes</button>
+        <button type="button" class="danger" id="cancelBtn">Cancel booking</button>
+      </form>
+    </div>
+  </section>
+
+  <footer>Crossed-out dates are already taken.</footer>
+</main>
+
+<div id="modal" class="modal" hidden>
+  <div class="modal-box">
+    <div class="modal-emoji" id="modalEmoji">😺</div>
+    <h2 id="modalTitle"></h2>
+    <p id="modalText"></p>
+    <button class="primary" id="modalClose">OK</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<script>
+/* ⬇️ Paste your Apps Script Web App URL here (ends in /exec) */
+const API_URL = 'https://script.google.com/macros/s/AKfycbw19dxjV0WEiopP5I7zwQ1nCySZGQKko2LPqSAWu6KOdwqNHZjD_cYG85nYMr71W9J8sQ/exec';
+
+const $ = s => document.querySelector(s);
+
+async function api(action, data) {
+  // text/plain body = no CORS preflight, which Apps Script can't answer
+  const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(Object.assign({ action }, data || {})) });
+  const json = await res.json();
+  if (!json.ok) throw new Error(json.error || 'Something went wrong.');
+  return json;
+}
+
+const ymd = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+const toDate = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+const pretty = s => toDate(s).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+const dayCount = (a, b) => Math.round((toDate(b) - toDate(a)) / 86400000) + 1;
+const overlaps = (start, end, busy) => busy.some(r => r.from <= end && r.to >= start);
+const rangeLabel = (s, e) => (s === e ? pretty(s) : pretty(s) + ' → ' + pretty(e)) + ' · ' + dayCount(s, e) + (dayCount(s, e) === 1 ? ' day' : ' days');
+
+function showMsg(el, text, kind) { el.textContent = text; el.className = 'msg ' + kind; el.hidden = !text; }
+function modal(title, text, emoji) {
+  $('#modalTitle').textContent = title; $('#modalText').textContent = text;
+  $('#modalEmoji').textContent = emoji || '😺'; $('#modal').hidden = false;
+}
+$('#modalClose').onclick = () => { $('#modal').hidden = true; };
+
+function makeCal(input, busy, minDate, defaultDate, onPick) {
+  return flatpickr(input, {
+    inline: true, mode: 'range', dateFormat: 'Y-m-d', minDate, defaultDate,
+    disable: busy, showMonths: window.innerWidth > 720 ? 2 : 1,
+    locale: { firstDayOfWeek: 1 },
+    onChange: dates => onPick(dates.length === 2 ? { start: ymd(dates[0]), end: ymd(dates[1]) }
+                                : dates.length === 1 ? { start: ymd(dates[0]), end: ymd(dates[0]), partial: true } : null),
+  });
+}
+
+/* ---------- tabs ---------- */
+document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => showTab(b.dataset.tab));
+function showTab(name) {
+  document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  $('#tab-book').hidden = name !== 'book';
+  $('#tab-manage').hidden = name !== 'manage';
+}
+
+/* ---------- book ---------- */
+let bookCal, bookBusy = [], bookSel = null;
+
+function renderBookRange() {
+  const el = $('#bookRange');
+  if (!bookSel) { el.className = 'range-text muted'; el.textContent = 'Tap your first day, then your last day.'; return; }
+  if (overlaps(bookSel.start, bookSel.end, bookBusy)) {
+    el.className = 'range-text bad'; el.textContent = "Some of those days aren't available. Please pick different dates."; return;
+  }
+  el.className = 'range-text';
+  el.textContent = rangeLabel(bookSel.start, bookSel.end) + (bookSel.partial ? ' (tap again for an end date, or keep as one day)' : '');
+}
+
+async function loadAvailability() {
+  const { busy } = await api('availability');
+  bookBusy = busy;
+  if (!bookCal) bookCal = makeCal($('#bookDates'), busy, 'today', null, sel => { bookSel = sel; renderBookRange(); });
+  else { bookCal.set('disable', busy); bookCal.clear(); bookSel = null; }
+  renderBookRange();
+}
+
+$('#bookForm').onsubmit = async e => {
+  e.preventDefault();
+  const msg = $('#bookMsg'); showMsg(msg, '', 'err');
+  const name = $('#bName').value.trim(), email = $('#bEmail').value.trim();
+  if (!bookSel) return showMsg(msg, 'Please choose your dates on the calendar.', 'err');
+  if (overlaps(bookSel.start, bookSel.end, bookBusy)) return showMsg(msg, "Some of those days aren't available.", 'err');
+  if (!name) return showMsg(msg, "Please enter your cat's name.", 'err');
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showMsg(msg, 'Please enter a valid email.', 'err');
+
+  const btn = $('#bookBtn'); btn.disabled = true; btn.textContent = 'Checking my calendar…';
+  try {
+    await api('book', { name, email, start: bookSel.start, end: bookSel.end });
+    modal('Thanks!', "I've got your request to look after " + name + ' for ' + rangeLabel(bookSel.start, bookSel.end) +
+      ". I'll double-check the details and get back to you by email. These dates are held for you in the meantime.", '😺');
+    $('#bookForm').reset();
+    await loadAvailability();
+  } catch (err) {
+    showMsg(msg, err.message, 'err');
+    loadAvailability().catch(() => {});
+  } finally {
+    btn.disabled = false; btn.textContent = 'Request booking';
+  }
+};
+
+/* ---------- manage: request link ---------- */
+$('#lookupForm').onsubmit = async e => {
+  e.preventDefault();
+  const msg = $('#lookupMsg'), email = $('#lEmail').value.trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showMsg(msg, 'Please enter a valid email.', 'err');
+  const btn = $('#lookupBtn'); btn.disabled = true;
+  try {
+    await api('requestManageLink', { email });
+    showMsg(msg, "If there's an upcoming booking under that email, a link is on its way. Check your inbox (and spam).", 'ok');
+  } catch (err) { showMsg(msg, err.message, 'err'); }
+  finally { btn.disabled = false; }
+};
+
+/* ---------- manage: edit via private link ---------- */
+const params = new URLSearchParams(location.search);
+const M = { id: params.get('id'), token: params.get('token'), booking: null, busy: [], sel: null, cal: null };
+
+function renderEditRange() {
+  const el = $('#editRange');
+  if (!M.sel) { el.className = 'range-text muted'; el.textContent = 'Pick new dates.'; return; }
+  if (overlaps(M.sel.start, M.sel.end, M.busy)) { el.className = 'range-text bad'; el.textContent = "Some of those days aren't available."; return; }
+  el.className = 'range-text'; el.textContent = rangeLabel(M.sel.start, M.sel.end);
+}
+
+function renderBooking() {
+  const b = M.booking, active = b.status === 'pending' || b.status === 'approved';
+  const labels = {
+    pending: '⏳ Waiting for confirmation',
+    approved: '✅ Confirmed — see you then!',
+    rejected: '😿 Not accepted',
+    cancelled: 'Cancelled',
+  };
+  const st = $('#editStatus');
+  st.className = 'status ' + b.status;
+  st.textContent = labels[b.status] || b.status;
+  if (b.status === 'rejected' && b.reason) { const s = document.createElement('small'); s.textContent = b.reason; st.appendChild(s); }
+
+  $('#eName').value = b.name; $('#eEmail').value = b.email;
+  M.sel = { start: b.start, end: b.end };
+  const today = ymd(new Date());
+  if (M.cal) M.cal.destroy();
+  M.cal = makeCal($('#editDates'), M.busy, b.start < today ? b.start : 'today', [b.start, b.end], sel => { M.sel = sel; renderEditRange(); });
+  renderEditRange();
+
+  ['#eName', '#saveBtn', '#cancelBtn'].forEach(s => { $(s).disabled = !active; });
+  $('#saveBtn').hidden = $('#cancelBtn').hidden = !active;
+  if (!active) M.cal.set('clickOpens', false);
+}
+
+async function loadBooking() {
+  showTab('manage');
+  $('#manageLookup').hidden = true; $('#manageEdit').hidden = false;
+  $('#editStatus').className = 'status'; $('#editStatus').textContent = 'Loading your booking…';
+  try {
+    const r = await api('getBooking', { id: M.id, token: M.token });
+    M.booking = r.booking; M.busy = r.busy;
+    renderBooking();
+  } catch (err) {
+    $('#manageEdit').hidden = true; $('#manageLookup').hidden = false;
+    showMsg($('#lookupMsg'), err.message, 'err');
+  }
+}
+
+$('#editForm').onsubmit = async e => {
+  e.preventDefault();
+  const msg = $('#editMsg'); showMsg(msg, '', 'err');
+  if (!M.sel) return showMsg(msg, 'Please choose your dates.', 'err');
+  if (overlaps(M.sel.start, M.sel.end, M.busy)) return showMsg(msg, "Some of those days aren't available.", 'err');
+  const datesChanged = M.sel.start !== M.booking.start || M.sel.end !== M.booking.end;
+  if (datesChanged && M.booking.status === 'approved' &&
+      !confirm('Changing dates means I need to confirm your booking again. Continue?')) return;
+
+  const btn = $('#saveBtn'); btn.disabled = true; btn.textContent = 'Saving…';
+  try {
+    const r = await api('updateBooking', { id: M.id, token: M.token, name: $('#eName').value.trim(),
+      start: M.sel.start, end: M.sel.end });
+    M.booking = r.booking;
+    const fresh = await api('getBooking', { id: M.id, token: M.token }); M.busy = fresh.busy;
+    renderBooking();
+    modal(datesChanged ? 'Changes sent!' : 'Saved!',
+      datesChanged ? "I'll double-check your new dates and confirm by email." : 'Your details have been updated.', '👍');
+  } catch (err) { showMsg(msg, err.message, 'err'); }
+  finally { btn.disabled = false; btn.textContent = 'Save changes'; }
+};
+
+$('#cancelBtn').onclick = async () => {
+  if (!confirm('Cancel this booking?')) return;
+  const btn = $('#cancelBtn'); btn.disabled = true;
+  try {
+    const r = await api('cancelBooking', { id: M.id, token: M.token });
+    M.booking = r.booking; renderBooking();
+    modal('Booking cancelled', 'No problem. Hope to see your cat another time!', '👋');
+  } catch (err) { showMsg($('#editMsg'), err.message, 'err'); btn.disabled = false; }
+};
+
+/* ---------- start ---------- */
+if (API_URL.startsWith('PASTE')) {
+  $('#bookRange').className = 'range-text bad';
+  $('#bookRange').textContent = 'Setup needed: paste your Apps Script Web App URL into API_URL in index.html.';
+} else {
+  loadAvailability().catch(err => { $('#bookRange').className = 'range-text bad'; $('#bookRange').textContent = err.message; });
+  if (M.id && M.token) loadBooking();
+}
+</script>
+</body>
+</html>
