@@ -10,8 +10,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#fbf6ef; --card:#fff; --ink:#2b2118; --muted:#8a7563; --line:#eee2d4;
-    --accent:#e07a3f; --accent-soft:#fde7d8; --ok:#2e7d32; --bad:#c62828;
+    --bg:#f7f3fc; --card:#fff; --ink:#2e2440; --muted:#7d7192; --line:#e8e0f3;
+    --accent:#8e6cc9; --accent-soft:#ece4fa; --ok:#2e7d32; --bad:#c62828;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Inter,system-ui,sans-serif}
@@ -23,12 +23,12 @@
   .tabs{display:flex;gap:6px;justify-content:center;margin-bottom:16px}
   .tabs button{border:0;background:transparent;padding:10px 16px;border-radius:999px;font:600 15px Inter,sans-serif;color:var(--muted);cursor:pointer}
   .tabs button.active{background:var(--ink);color:#fff}
-  .card{background:var(--card);border-radius:20px;padding:24px;box-shadow:0 6px 30px rgba(80,50,20,.07)}
+  .card{background:var(--card);border-radius:20px;padding:24px;box-shadow:0 6px 30px rgba(90,60,140,.07)}
   label{display:block;font-weight:600;font-size:14px;margin:16px 0 6px}
   .opt{font-weight:400;color:var(--muted)}
-  input,textarea{width:100%;border:1px solid #e0d2c2;border-radius:12px;padding:12px 14px;font:inherit;background:#fffdfa;color:inherit}
+  input,textarea{width:100%;border:1px solid #dcd0ee;border-radius:12px;padding:12px 14px;font:inherit;background:#fdfbff;color:inherit}
   input:focus,textarea:focus{outline:2px solid var(--accent);border-color:transparent}
-  input[readonly]{background:#f6efe6;color:var(--muted)}
+  input[readonly]{background:#f1ecf8;color:var(--muted)}
   .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
   @media (max-width:560px){.row{grid-template-columns:1fr}}
   .cal-wrap{display:flex;justify-content:center;overflow-x:auto}
@@ -48,18 +48,18 @@
   .inline-form .primary{width:auto;margin:0;white-space:nowrap}
   @media (max-width:560px){.inline-form{flex-direction:column}}
   .status{padding:12px 14px;border-radius:12px;margin-bottom:8px;font-weight:600}
-  .status.pending{background:#fff4e5}
+  .status.pending{background:#f3edfb}
   .status.approved{background:#eaf5ea;color:var(--ok)}
-  .status.rejected,.status.cancelled{background:#f3f0ec;color:var(--muted)}
+  .status.rejected,.status.cancelled{background:#f1eff4;color:var(--muted)}
   .status small{display:block;font-weight:400;margin-top:4px;white-space:pre-wrap}
   footer{text-align:center;color:var(--muted);font-size:13px;margin-top:20px}
   /* calendar */
   .flatpickr-calendar.inline{box-shadow:none;border:1px solid var(--line);border-radius:14px}
   .flatpickr-day.selected,.flatpickr-day.startRange,.flatpickr-day.endRange{background:var(--accent)!important;border-color:var(--accent)!important}
   .flatpickr-day.inRange{background:var(--accent-soft);border-color:var(--accent-soft);box-shadow:-5px 0 0 var(--accent-soft),5px 0 0 var(--accent-soft)}
-  .flatpickr-day.flatpickr-disabled:not(.prevMonthDay):not(.nextMonthDay){text-decoration:line-through;color:#d3c4b5}
+  .flatpickr-day.flatpickr-disabled:not(.prevMonthDay):not(.nextMonthDay){text-decoration:line-through;color:#cdc2de}
   /* modal */
-  .modal{position:fixed;inset:0;background:rgba(43,33,24,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
+  .modal{position:fixed;inset:0;background:rgba(46,36,64,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
   .modal[hidden]{display:none}
   .modal-box{background:#fff;border-radius:20px;padding:28px;max-width:420px;width:100%;text-align:center;animation:pop .25s ease}
   .modal-emoji{font-size:48px}
@@ -139,7 +139,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
 <script>
 /* ⬇️ Paste your Apps Script Web App URL here (ends in /exec) */
-const API_URL = 'https://script.google.com/macros/s/AKfycbw19dxjV0WEiopP5I7zwQ1nCySZGQKko2LPqSAWu6KOdwqNHZjD_cYG85nYMr71W9J8sQ/exec';
+const API_URL = 'PASTE_YOUR_WEB_APP_URL_HERE';
 
 const $ = s => document.querySelector(s);
 
