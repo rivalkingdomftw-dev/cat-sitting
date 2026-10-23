@@ -99,7 +99,7 @@
   <!-- MANAGE -->
   <section id="tab-manage" class="card" hidden>
     <div id="manageLookup">
-      <p style="margin-top:0">Enter the email you booked with, and I'll send you a private link to view, change or cancel your booking.</p>
+      <p style="margin-top:0">Enter the email you booked with, and we'll send you a private link to view, change or cancel your booking.</p>
       <form id="lookupForm" class="inline-form" novalidate>
         <input id="lEmail" type="email" placeholder="you@example.com" autocomplete="email">
         <button class="primary" id="lookupBtn">Email me my link</button>
@@ -155,6 +155,7 @@ const ymd = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0
 const toDate = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
 const pretty = s => toDate(s).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
 const dayCount = (a, b) => Math.round((toDate(b) - toDate(a)) / 86400000) + 1;
+const whenLabel = (s, e) => s === e ? 'on ' + pretty(s) : 'from ' + pretty(s) + ' to ' + pretty(e);
 const overlaps = (start, end, busy) => busy.some(r => r.from <= end && r.to >= start);
 const rangeLabel = (s, e) => (s === e ? pretty(s) : pretty(s) + ' → ' + pretty(e)) + ' · ' + dayCount(s, e) + (dayCount(s, e) === 1 ? ' day' : ' days');
 
@@ -213,11 +214,11 @@ $('#bookForm').onsubmit = async e => {
   if (!name) return showMsg(msg, "Please enter your cat's name.", 'err');
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showMsg(msg, 'Please enter a valid email.', 'err');
 
-  const btn = $('#bookBtn'); btn.disabled = true; btn.textContent = 'Checking my calendar…';
+  const btn = $('#bookBtn'); btn.disabled = true; btn.textContent = 'Checking our calendar…';
   try {
     await api('book', { name, email, start: bookSel.start, end: bookSel.end });
-    modal('Thanks!', "I've got your request to look after " + name + ' for ' + rangeLabel(bookSel.start, bookSel.end) +
-      ". I'll double-check the details and get back to you by email. These dates are held for you in the meantime.", '😺');
+    modal('Thanks!', "We've got your request to look after " + name + ' ' + whenLabel(bookSel.start, bookSel.end) +
+      ". We'll double-check the details and get back to you by email. These dates are held for you in the meantime.", '😺');
     $('#bookForm').reset();
     await loadAvailability();
   } catch (err) {
@@ -298,7 +299,7 @@ $('#editForm').onsubmit = async e => {
   if (overlaps(M.sel.start, M.sel.end, M.busy)) return showMsg(msg, "Some of those days aren't available.", 'err');
   const datesChanged = M.sel.start !== M.booking.start || M.sel.end !== M.booking.end;
   if (datesChanged && M.booking.status === 'approved' &&
-      !confirm('Changing dates means I need to confirm your booking again. Continue?')) return;
+      !confirm('Changing dates means we need to confirm your booking again. Continue?')) return;
 
   const btn = $('#saveBtn'); btn.disabled = true; btn.textContent = 'Saving…';
   try {
@@ -308,7 +309,7 @@ $('#editForm').onsubmit = async e => {
     const fresh = await api('getBooking', { id: M.id, token: M.token }); M.busy = fresh.busy;
     renderBooking();
     modal(datesChanged ? 'Changes sent!' : 'Saved!',
-      datesChanged ? "I'll double-check your new dates and confirm by email." : 'Your details have been updated.', '👍');
+      datesChanged ? "We'll double-check your new dates and confirm by email." : 'Your details have been updated.', '👍');
   } catch (err) { showMsg(msg, err.message, 'err'); }
   finally { btn.disabled = false; btn.textContent = 'Save changes'; }
 };
